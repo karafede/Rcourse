@@ -35,7 +35,7 @@ EAD <- EAD %>%
 
 data_time <- EAD %>%
   filter(Site == "Bain Aljesrain") %>%
-  select(date,
+  dplyr::select(date,
          Site,
          Pollutant,
          Value) 
@@ -47,17 +47,14 @@ data_time <- EAD %>%
 data_time <- data_time %>%
   spread(Pollutant, Value)
 
+
+data_time_all <- data_time 
+
 ############################################################################
 ## static time series ######################################################
 ###################################################################################################################
 ######### plot TIME-SERIES of AQ PM10 data and WRF PM10 data ######################################################
 ###################################################################################################################
-
-
-# jpeg('time_series_hourly.jpg',
-#      quality = 100, bg = "white", res = 300, width = 18, height = 9, units = "in")
-# par(mar=c(4, 10, 9, 2) + 0.3)
-# oldpar <- par(las=1)
 
 
 output_folder <- "Z:/_SHARED_FOLDERS/Air Quality/Phase 2/Rcourse/"
@@ -90,23 +87,14 @@ print(plot)
 dev.off()
 
 
-# par(oldpar)
-# dev.off()
-
 
 
 
 ################################################
 ###################################################
 
-
-# jpeg('time_series_hourly_by_site.jpg',
-#      quality = 100, bg = "white", res = 300, width = 18, height = 9, units = "in")
-# par(mar=c(4, 10, 9, 2) + 0.3)
-# oldpar <- par(las=1)
-
 data_time <- EAD %>%
-  select(date,
+  dplyr::select(date,
          Site,
          Pollutant,
          Value) 
@@ -140,8 +128,6 @@ png(paste0(output_folder,"time_series_hourly_by_site.jpg"),
 print(plot)
 dev.off()
 
-# par(oldpar)
-# dev.off()
 
 
 
@@ -152,8 +138,8 @@ dev.off()
 
 
 data_time <- EAD %>%
-  filter(Site == "Bain Aljesrain") %>%
-  select(date,
+  dplyr::filter(Site == "Bain Aljesrain") %>%
+  dplyr::select(date,
          Site,
          Pollutant,
          Value) 
@@ -189,7 +175,7 @@ new_daily_data <- daily_data %>%
 
 
 data_time <- EAD %>%
-  select(date,
+  dplyr::select(date,
          Site,
          Pollutant,
          Value) 
@@ -200,14 +186,12 @@ data_time <- data_time %>%
 
 head(data_time)
 
-
-
-names(data_time)[names(data_time) == 'date'] <- 'Datetime'
+# names(data_time)[names(data_time) == 'date'] <- 'Datetime'
 
 daily_data <- data_time %>%
-  mutate(Date = date(Datetime)) %>%
-  mutate(Hour = hour(Datetime)) %>%
-  mutate(Year = year(Datetime))
+  mutate(Date = date(date)) %>%
+  mutate(Hour = hour(date)) %>%
+  mutate(Year = year(date))
 
 
 AAA <- na.omit(daily_data)
@@ -265,7 +249,7 @@ dev.off()
 
 
 # Build timeseries for plots
-time_series <- data_frame_to_timeseries(data_time)
+time_series <- data_frame_to_timeseries(data_time_all)
 
 # Return
 time_series
